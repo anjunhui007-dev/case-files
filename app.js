@@ -1,6 +1,6 @@
 const app = document.querySelector('#app');
 const modalRoot = document.querySelector('#modal-root');
-const STORE_KEY = 'casefiles-v040';
+const STORE_KEY = 'casefiles-v041';
 
 const CASE = {
   id: 'CASE-001', title: '마지막 우편함', genre: '의문사 / 폐쇄형 생활 공간', difficulty: '★★★☆☆', expected: '35–55분',
@@ -24,45 +24,34 @@ const sealed = (() => ({
 const EVIDENCE = {
   'E-01': {name:'피해자 휴대전화', desc:'피해자의 개인 휴대전화. 사건 직전 통화와 메모 일부가 남아 있다.', atlas:'E01'},
   'E-02': {name:'현관 출입기록', desc:'세림빌딩 공동현관의 출입기록. 카드·비밀번호 인증 시각을 확인할 수 있다.', atlas:'D01'},
-  'E-03': {name:'넘어진 사다리 감식', desc:'지하 설비구역에서 발견된 사다리의 상태와 바닥 접촉면을 기록한 감식 자료.', atlas:'E06'},
-  'E-04': {name:'전기 패널 조작 로그', desc:'지하 전기 설비 패널의 최근 접근·조작 시각이 기록된 시스템 자료.', atlas:'D07'},
-  'E-05': {name:'작업복 속 메모 조각', desc:'피해자 작업복 주머니에서 발견된 손상된 메모 조각. 일부 문구만 판독 가능하다.', atlas:'E01'},
+  'E-03': {name:'넘어진 사다리 감식', desc:'지하 설비구역에서 발견된 사다리의 상태와 바닥 접촉면을 기록한 감식 자료.', atlas:'E02'},
+  'E-04': {name:'전기 패널 조작 로그', desc:'지하 전기 설비 패널의 최근 접근·조작 시각이 기록된 시스템 자료.', atlas:'D02'},
+  'E-05': {name:'작업복 속 메모 조각', desc:'피해자 작업복 주머니에서 발견된 손상된 메모 조각. 일부 문구만 판독 가능하다.', atlas:'E03'},
   'E-06': {name:'21:39 로비 CCTV', desc:'CCTV 장애 직전 1층 로비와 공용 우편함 구역을 촬영한 프레임.', atlas:'C02'},
-  'E-07': {name:'CCTV 장애 로그', desc:'건물 내부 CCTV의 장애 시작과 복구 시각을 기록한 시스템 로그.', atlas:'C04'},
+  'E-07': {name:'CCTV 장애 로그', desc:'건물 내부 CCTV의 장애 시작과 복구 시각을 기록한 시스템 로그.', atlas:'D03'},
   'E-08': {name:'외부 주차장 프레임', desc:'CCTV 복구 직후 외부 주차장 방면에서 확보된 영상 프레임.', atlas:'C01'},
-  'E-09': {name:'공용 우편함 잠금 흔적', desc:'1층 공용 우편함과 발송함 주변에서 확인된 최근 조작 흔적.', atlas:'S02'},
-  'E-10': {name:'찢어진 봉투 조각', desc:'공용 발송함 가장자리에서 발견된 두꺼운 봉투의 찢어진 일부.', atlas:'E01'},
-  'E-11': {name:'수리비 정산표', desc:'최근 수개월간 건물 설비 수리비가 정리된 사본. 반복되는 항목이 일부 보인다.', atlas:'D07'},
-  'E-12': {name:'설비 기사 작업기록', desc:'당일 설비 점검 내용과 담당자의 작업 시간을 기록한 문서.', atlas:'D04'},
-  'E-13': {name:'피해자 통화 메모', desc:'피해자 휴대전화에서 복구된 짧은 메모와 통화 관련 기록.', atlas:'D05'},
-  'E-14': {name:'우편물 회수 기록', desc:'공용 발송함의 개폐·회수 시각을 확인할 수 있는 관리 기록.', atlas:'D03'}
+  'E-09': {name:'공용 우편함 잠금 흔적', desc:'1층 공용 우편함과 발송함 주변에서 확인된 최근 조작 흔적.', atlas:'E04'},
+  'E-10': {name:'찢어진 봉투 조각', desc:'공용 발송함 가장자리에서 발견된 두꺼운 봉투의 찢어진 일부.', atlas:'E05'},
+  'E-11': {name:'수리비 정산표', desc:'최근 수개월간 건물 설비 수리비가 정리된 사본. 반복되는 항목이 일부 보인다.', atlas:'D04'},
+  'E-12': {name:'설비 기사 작업기록', desc:'당일 설비 점검 내용과 담당자의 작업 시간을 기록한 문서.', atlas:'D05'},
+  'E-13': {name:'피해자 통화 메모', desc:'피해자 휴대전화에서 복구된 짧은 메모와 통화 관련 기록.', atlas:'D06'},
+  'E-14': {name:'우편물 회수 기록', desc:'공용 발송함의 개폐·회수 시각을 확인할 수 있는 관리 기록.', atlas:'D07'}
 };
 
-// atlas-case01.png: 1536x1024 contact sheet. Rectangles are source-pixel crops.
-const LEGACY_ATLAS = {
-  file:'atlas-case01.png', w:1536, h:1024,
-  rects: {
-    E01:[18,350,198,163], E02:[226,350,198,163], E03:[435,350,198,163], E04:[643,350,198,163], E05:[851,350,198,163], E06:[1060,350,198,163], E07:[1268,350,198,163], E08:[1352,350,166,163],
-    C01:[18,570,252,174], C02:[278,570,252,174], C03:[538,570,252,174], C04:[798,570,252,174], C05:[1058,570,252,174], C06:[1318,570,200,174],
-    D01:[18,803,171,184], D02:[201,803,171,184], D03:[383,803,171,184], D04:[566,803,171,184], D05:[748,803,171,184], D06:[930,803,171,184], D07:[1113,803,171,184], D08:[1295,803,171,184],
-    S01:[825,37,171,225], S02:[1007,37,171,225], S03:[1190,37,171,225], S04:[1372,37,146,225],
-    P01:[18,37,155,225], P02:[184,37,155,225], P03:[350,37,155,225], P04:[516,37,155,225], P05:[682,37,127,225]
-  }
-};
+const LEGACY_ATLAS = { file:'atlas-case01.png', w:1536, h:1024, rects:{} };
 
-// v0.4.0 Atlas v2 locked coordinate specification.
-// Keep the current legacy atlas active until atlas-case01-v2.png is generated.
+// v0.4.1 Atlas v2 — 4096×4096 source image, exact non-overlapping crops.
 const ATLAS_V2 = {
-  file:'atlas-case01-v2.png', w:4096, h:2048,
+  file:'atlas-case01-v2.png', w:4096, h:4096,
   rects:{
-    P01:[96,96,512,640], P02:[640,96,512,640], P03:[1184,96,512,640], P04:[1728,96,512,640], P05:[2272,96,512,640],
-    S01:[2816,96,1184,640], S02:[2816,96,1184,640], S03:[2816,96,1184,640], S04:[2816,96,1184,640],
-    C01:[96,800,608,384], C02:[736,800,608,384], C03:[1376,800,608,384], C04:[2016,800,608,384], C05:[2656,800,608,384], C06:[3296,800,704,384],
-    E01:[96,1248,464,640], E02:[592,1248,464,640], E03:[1088,1248,464,640], E04:[1584,1248,464,640], E05:[2080,1248,464,640], E06:[2576,1248,464,640], E07:[3072,1248,464,640], E08:[3568,1248,432,640],
-    D01:[96,1248,464,640], D02:[592,1248,464,640], D03:[1088,1248,464,640], D04:[1584,1248,464,640], D05:[2080,1248,464,640], D06:[2576,1248,464,640], D07:[3072,1248,464,640], D08:[3568,1248,432,640]
+    P01:[64,64,704,768], P02:[832,64,704,768], P03:[1600,64,704,768], P04:[2368,64,704,768], P05:[3136,64,704,768],
+    S01:[64,896,944,768], S02:[1040,896,944,768], S03:[2016,896,944,768], S04:[2992,896,944,768],
+    C01:[64,1728,608,512], C02:[704,1728,608,512], C03:[1344,1728,608,512], C04:[1984,1728,608,512], C05:[2624,1728,608,512], C06:[3264,1728,608,512],
+    E01:[64,2304,448,800], E02:[544,2304,448,800], E03:[1024,2304,448,800], E04:[1504,2304,448,800], E05:[1984,2304,448,800], E06:[2464,2304,448,800], E07:[2944,2304,448,800], E08:[3424,2304,448,800],
+    D01:[64,3168,448,800], D02:[544,3168,448,800], D03:[1024,3168,448,800], D04:[1504,3168,448,800], D05:[1984,3168,448,800], D06:[2464,3168,448,800], D07:[2944,3168,448,800], D08:[3424,3168,448,800]
   }
 };
-const ATLAS = LEGACY_ATLAS;
+const ATLAS = ATLAS_V2;
 
 const NAV = [
   ['hub','수사 본부'],['person-a','한소영과 대화'],['person-b','이준석과 대화'],['person-c','차민규와 대화'],['scene','사건 현장 둘러보기'],['police','경찰의 수사 현황'],['analyst','조사원과 대화'],['cctv','CCTV 보기'],['evidence','증거 보관함'],['notes','추리 노트'],['final','최종 추리']
@@ -82,17 +71,14 @@ const defaultState = () => ({
 
 function loadState(){
   let s=JSON.parse(localStorage.getItem(STORE_KEY)||'null');
-  if(!s){
-    const old=JSON.parse(localStorage.getItem('casefiles-v003')||localStorage.getItem('casefiles-v002')||'null');
-    s=old||defaultState();
-  }
   const d=defaultState();
+  if(!s){
+    const old=JSON.parse(localStorage.getItem('casefiles-v040')||localStorage.getItem('casefiles-v003')||localStorage.getItem('casefiles-v002')||'null');
+    if(old){s={...d,...old,settings:{...d.settings,...(old.settings||{})}};s.chats=d.chats;s.feed='v0.4.1 대화 엔진으로 갱신되었습니다. 기존 AI 대화 기록은 정리되었습니다.';}else s=d;
+  }
   s.settings={...d.settings,...(s.settings||{})};
   if(!s.settings.model || s.settings.model==='gemini-2.5-flash') s.settings.model='gemini-3.6-flash';
-  s.unseenEvidence=s.unseenEvidence||[];
-  s.unseenPeople=s.unseenPeople||[];
-  s.chats={...d.chats,...(s.chats||{})};
-  return s;
+  s.unseenEvidence=s.unseenEvidence||[];s.unseenPeople=s.unseenPeople||[];s.chats={...d.chats,...(s.chats||{})};return s;
 }
 let state=loadState();
 function save(){localStorage.setItem(STORE_KEY,JSON.stringify(state));}
@@ -100,213 +86,48 @@ function mountTemplate(id){const t=document.querySelector(id);app.replaceChildre
 function markVisited(scene){if(!state.visited.includes(scene))state.visited.push(scene);save();}
 function escapeHtml(s=''){return String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#039;','"':'&quot;'}[c]));}
 function panel(title,eyebrow,body){return `<article class="scene-card"><header class="scene-header"><div><div class="eyebrow">${eyebrow}</div><h3>${title}</h3></div></header><div class="scene-body">${body}</div></article>`;}
+function atlasStyle(key){const r=ATLAS.rects[key];if(!r)return '';const [x,y,w,h]=r;const bx=(x/(ATLAS.w-w))*100,by=(y/(ATLAS.h-h))*100;return `background-image:url('${ATLAS.file}');background-size:${(ATLAS.w/w)*100}% ${(ATLAS.h/h)*100}%;background-position:${bx}% ${by}%;`;}
 
-function atlasStyle(key){
-  const r=ATLAS.rects[key]; if(!r)return '';
-  const [x,y,w,h]=r; const bx=(x/(ATLAS.w-w))*100, by=(y/(ATLAS.h-h))*100;
-  return `background-image:url('${ATLAS.file}');background-size:${(ATLAS.w/w)*100}% ${(ATLAS.h/h)*100}%;background-position:${bx}% ${by}%;`;
-}
-
-function showHome(){
-  mountTemplate('#home-template');
-  const card=document.querySelector('.dashboard-card[data-action="open-case"] small');
-  if(card)card.textContent=`의문사 / ${state.solved?`해결 · ${state.grade}`:state.visited.length?'수사 진행 중':'미수사'}`;
-}
-function showBriefing(){
-  app.innerHTML=`<section class="screen"><article class="scene-card case-brief"><div class="case-brief-visual"></div><div class="case-brief-copy"><div class="eyebrow">${CASE.id} / ASSIGNMENT BRIEF</div><h2 style="font-size:2rem;margin:.45rem 0 1rem">${CASE.title}</h2><div class="case-meta"><div class="meta-cell"><small>사건 유형</small>${CASE.genre}</div><div class="meta-cell"><small>난이도</small>${CASE.difficulty}</div><div class="meta-cell"><small>예상 플레이</small>${CASE.expected}</div><div class="meta-cell"><small>사건 장소</small>${CASE.location}</div><div class="meta-cell"><small>피해자</small>${CASE.victim}</div><div class="meta-cell"><small>상태</small>${state.solved?'CLOSED':'OPEN'}</div></div><div class="eyebrow" style="margin-bottom:8px">사건을 맡게 된 개요</div><div class="assignment-box">${CASE.assignmentOverview}</div><div style="display:flex;gap:10px;margin-top:20px"><button class="btn btn-primary" data-action="start-case">${state.visited.length?'수사 계속하기':'수사 시작'}</button><button class="btn btn-ghost" data-action="home">사건 목록</button></div></div></article></section>`;
-}
-function renderNav(){
-  const nav=document.querySelector('#investigation-nav'); if(!nav)return;
-  nav.innerHTML=NAV.map(([id,label])=>{
-    const hasNew=(state.unseenPeople.includes(id)||(id==='evidence'&&state.unseenEvidence.length));
-    return `<button class="nav-item ${id==='final'?'danger':''}" data-scene="${id}">${label}${hasNew?'<span class="tiny-badge">NEW</span>':''}</button>`;
-  }).join('');
-  nav.querySelectorAll('[data-scene]').forEach(btn=>btn.addEventListener('click',()=>renderScene(btn.dataset.scene)));
-}
+function showHome(){mountTemplate('#home-template');const card=document.querySelector('.dashboard-card[data-action="open-case"] small');if(card)card.textContent=`의문사 / ${state.solved?`해결 · ${state.grade}`:state.visited.length?'수사 진행 중':'미수사'}`;}
+function showBriefing(){app.innerHTML=`<section class="screen"><article class="scene-card case-brief"><div class="case-brief-visual"></div><div class="case-brief-copy"><div class="eyebrow">${CASE.id} / ASSIGNMENT BRIEF</div><h2 style="font-size:2rem;margin:.45rem 0 1rem">${CASE.title}</h2><div class="case-meta"><div class="meta-cell"><small>사건 유형</small>${CASE.genre}</div><div class="meta-cell"><small>난이도</small>${CASE.difficulty}</div><div class="meta-cell"><small>예상 플레이</small>${CASE.expected}</div><div class="meta-cell"><small>사건 장소</small>${CASE.location}</div><div class="meta-cell"><small>피해자</small>${CASE.victim}</div><div class="meta-cell"><small>상태</small>${state.solved?'CLOSED':'OPEN'}</div></div><div class="eyebrow" style="margin-bottom:8px">사건을 맡게 된 개요</div><div class="assignment-box">${CASE.assignmentOverview}</div><div style="display:flex;gap:10px;margin-top:20px"><button class="btn btn-primary" data-action="start-case">${state.visited.length?'수사 계속하기':'수사 시작'}</button><button class="btn btn-ghost" data-action="home">사건 목록</button></div></div></article></section>`;}
+function renderNav(){const nav=document.querySelector('#investigation-nav');if(!nav)return;nav.innerHTML=NAV.map(([id,label])=>{const hasNew=(state.unseenPeople.includes(id)||(id==='evidence'&&state.unseenEvidence.length));return `<button class="nav-item ${id==='final'?'danger':''}" data-scene="${id}">${label}${hasNew?'<span class="tiny-badge">NEW</span>':''}</button>`;}).join('');nav.querySelectorAll('[data-scene]').forEach(btn=>btn.addEventListener('click',()=>renderScene(btn.dataset.scene)));}
 function showCase(){mountTemplate('#case-template');renderNav();renderScene('hub');refreshStatus();}
 function setActiveScene(scene){document.querySelectorAll('.nav-item[data-scene]').forEach(b=>b.classList.toggle('active',b.dataset.scene===scene));}
-function refreshStatus(){
-  const e=document.querySelector('#metric-evidence'),c=document.querySelector('#metric-contradictions'),p=document.querySelector('#progress-bar'),f=document.querySelector('#recent-feed');
-  if(e)e.textContent=`${String(state.evidence.length).padStart(2,'0')} / ${CASE.totalEvidence}`; if(c)c.textContent=`${String(state.contradictions.length).padStart(2,'0')} / ??`;
-  if(p)p.style.width=`${Math.min(96,8+state.evidence.length*5+state.contradictions.length*9+state.visited.length*2)}%`; if(f)f.textContent=state.feed; renderNav(); setActiveScene(window.currentScene||'hub');
-}
+function refreshStatus(){const e=document.querySelector('#metric-evidence'),c=document.querySelector('#metric-contradictions'),p=document.querySelector('#progress-bar'),f=document.querySelector('#recent-feed');if(e)e.textContent=`${String(state.evidence.length).padStart(2,'0')} / ${CASE.totalEvidence}`;if(c)c.textContent=`${String(state.contradictions.length).padStart(2,'0')} / ??`;if(p)p.style.width=`${Math.min(96,8+state.evidence.length*5+state.contradictions.length*9+state.visited.length*2)}%`;if(f)f.textContent=state.feed;renderNav();setActiveScene(window.currentScene||'hub');}
 
 function renderScene(scene){
-  window.currentScene=scene; markVisited(scene);
-  if(state.unseenPeople.includes(scene)){state.unseenPeople=state.unseenPeople.filter(x=>x!==scene);save();}
-  setActiveScene(scene); const target=document.querySelector('#scene-content'); if(!target)return;
+  window.currentScene=scene;markVisited(scene);if(state.unseenPeople.includes(scene)){state.unseenPeople=state.unseenPeople.filter(x=>x!==scene);save();}setActiveScene(scene);const target=document.querySelector('#scene-content');if(!target)return;
   const scenes={
     hub:()=>panel('수사 본부','INVESTIGATION HUB',`<div class="case-intro-banner"><strong>${CASE.title}</strong>${CASE.assignmentOverview}</div><div class="hero-scene"><div class="hero-scene-copy"><div class="eyebrow">CURRENT NOTICE</div><h2>마지막 40분을 재구성하십시오.</h2><p>기록의 시각과 진술이 서로 충돌하는 지점을 중심으로 확인하십시오.</p></div></div><div class="action-grid"><button class="action-card" data-jump="person-a"><strong>한소영과 대화</strong><span>입주자대표회 관련 진술</span></button><button class="action-card" data-jump="scene"><strong>사건 현장</strong><span>지하 설비구역 조사</span></button><button class="action-card" data-jump="police"><strong>경찰 수사 현황</strong><span>공식 수사 정보 확인</span></button><button class="action-card" data-jump="cctv"><strong>CCTV 기록</strong><span>공백 전후 프레임 검토</span></button></div>`),
     scene:()=>panel('지하 설비구역','CRIME SCENE',`<div class="scene-photo" style="${atlasStyle('S04')}"></div><div class="action-grid"><button class="action-card inspect" data-evidence="E-03"><strong>넘어진 사다리</strong><span>바닥과 접촉면 확인</span></button><button class="action-card inspect" data-evidence="E-04"><strong>전기 패널</strong><span>최근 조작 기록 확인</span></button><button class="action-card contradiction" data-contradiction="CT-01"><strong>바닥의 젖은 흔적</strong><span>실내 동선과 맞지 않는 물자국</span></button><button class="action-card inspect" data-evidence="E-05"><strong>피해자 작업복</strong><span>주머니 속 메모 조각</span></button></div>`),
     cctv:()=>panel('세림빌딩 CCTV','CAMERA ARCHIVE',`<div class="scene-photo cctv-photo" style="${atlasStyle('C02')}"></div><div class="action-grid"><button class="action-card inspect" data-evidence="E-06"><strong>21:39 로비 프레임</strong><span>우편함 앞 장면</span></button><button class="action-card inspect" data-evidence="E-07"><strong>CCTV 장애 로그</strong><span>장애 시작·복구 시각</span></button><button class="action-card contradiction" data-contradiction="CT-02"><strong>진술 시간과 비교</strong><span>건물 이탈 진술과 기록 대조</span></button><button class="action-card inspect" data-evidence="E-08"><strong>외부 주차장 프레임</strong><span>복구 직후 기록</span></button></div>`),
-    evidence:()=>panel('증거 보관함','EVIDENCE',`<div class="evidence-grid">${evidenceCards()}</div>`),
-    notes:()=>panel('추리 노트','DEDUCTION NOTES',`<textarea id="notes" class="note-area" placeholder="시간대, 진술의 모순, 확인할 사항을 기록하십시오.">${escapeHtml(state.notes)}</textarea>`),
-    final:()=>finalScene()
+    evidence:()=>panel('증거 보관함','EVIDENCE',`<div class="evidence-grid">${evidenceCards()}</div>`),notes:()=>panel('추리 노트','DEDUCTION NOTES',`<textarea id="notes" class="note-area" placeholder="시간대, 진술의 모순, 확인할 사항을 기록하십시오.">${escapeHtml(state.notes)}</textarea>`),final:()=>finalScene()
   };
   if(['person-a','person-b','person-c','police','analyst'].includes(scene)){target.innerHTML=dialogueScene(scene);wireDialogue(scene);}else target.innerHTML=(scenes[scene]||scenes.hub)();
-  target.querySelectorAll('[data-jump]').forEach(b=>b.addEventListener('click',()=>renderScene(b.dataset.jump)));
-  target.querySelectorAll('.inspect[data-evidence]').forEach(b=>b.addEventListener('click',()=>{collectEvidence(b.dataset.evidence);openEvidence(b.dataset.evidence);}));
-  target.querySelectorAll('[data-contradiction]').forEach(b=>b.addEventListener('click',()=>collectContradiction(b.dataset.contradiction)));
-  target.querySelectorAll('[data-evidence-open]').forEach(b=>b.addEventListener('click',()=>openEvidence(b.dataset.evidenceOpen)));
-  document.querySelector('#notes')?.addEventListener('input',e=>{state.notes=e.target.value;save();});
-  document.querySelector('#final-text')?.addEventListener('input',e=>{state.finalText=e.target.value;save();});
-  document.querySelector('#final-submit')?.addEventListener('click',submitFinal); refreshStatus();
+  target.querySelectorAll('[data-jump]').forEach(b=>b.addEventListener('click',()=>renderScene(b.dataset.jump)));target.querySelectorAll('.inspect[data-evidence]').forEach(b=>b.addEventListener('click',()=>{collectEvidence(b.dataset.evidence);openEvidence(b.dataset.evidence);}));target.querySelectorAll('[data-contradiction]').forEach(b=>b.addEventListener('click',()=>collectContradiction(b.dataset.contradiction)));target.querySelectorAll('[data-evidence-open]').forEach(b=>b.addEventListener('click',()=>openEvidence(b.dataset.evidenceOpen)));document.querySelector('#notes')?.addEventListener('input',e=>{state.notes=e.target.value;save();});document.querySelector('#final-text')?.addEventListener('input',e=>{state.finalText=e.target.value;save();});document.querySelector('#final-submit')?.addEventListener('click',submitFinal);refreshStatus();
 }
-
-function evidenceCards(){
-  return Object.entries(EVIDENCE).map(([id,ev])=>{
-    const locked=!state.evidence.includes(id); const isNew=state.unseenEvidence.includes(id);
-    return `<button class="evidence-card ${locked?'locked':''}" ${locked?'disabled':`data-evidence-open="${id}"`}><div class="evidence-thumb" style="${locked?'':atlasStyle(ev.atlas)}"></div><strong>${locked?'미확보 자료':`${id} ${ev.name}`}</strong><small>${locked?'LOCKED':'클릭하여 상세 확인'}</small>${isNew&&!locked?'<span class="evidence-new">NEW</span>':''}</button>`;
-  }).join('');
-}
-function openEvidence(id){
-  if(!state.evidence.includes(id))return; const ev=EVIDENCE[id]; state.unseenEvidence=state.unseenEvidence.filter(x=>x!==id); save(); refreshStatus();
-  modalRoot.innerHTML=`<div class="modal-backdrop" data-close-modal><div class="evidence-modal" role="dialog" aria-modal="true"><button class="modal-close" data-close-modal>×</button><div class="evidence-modal-image" style="${atlasStyle(ev.atlas)}"></div><div class="evidence-modal-copy"><div class="eyebrow">${id} / EVIDENCE FILE</div><h2>${ev.name}</h2><p>${ev.desc}</p><div class="evidence-status">확보 완료 · 확인됨</div></div></div></div>`;
-  modalRoot.querySelectorAll('[data-close-modal]').forEach(el=>el.addEventListener('click',e=>{if(e.target===el||el.classList.contains('modal-close'))closeModal();}));
-  if(window.currentScene==='evidence')renderScene('evidence');
-}
+function evidenceCards(){return Object.entries(EVIDENCE).map(([id,ev])=>{const locked=!state.evidence.includes(id),isNew=state.unseenEvidence.includes(id);return `<button class="evidence-card ${locked?'locked':''}" ${locked?'disabled':`data-evidence-open="${id}"`}><div class="evidence-thumb" style="${locked?'':atlasStyle(ev.atlas)}"></div><strong>${locked?'미확보 자료':`${id} ${ev.name}`}</strong><small>${locked?'LOCKED':'클릭하여 상세 확인'}</small>${isNew&&!locked?'<span class="evidence-new">NEW</span>':''}</button>`;}).join('');}
+function openEvidence(id){if(!state.evidence.includes(id))return;const ev=EVIDENCE[id];state.unseenEvidence=state.unseenEvidence.filter(x=>x!==id);save();refreshStatus();modalRoot.innerHTML=`<div class="modal-backdrop" data-close-modal><div class="evidence-modal" role="dialog" aria-modal="true"><button class="modal-close" data-close-modal>×</button><div class="evidence-modal-image" style="${atlasStyle(ev.atlas)}"></div><div class="evidence-modal-copy"><div class="eyebrow">${id} / EVIDENCE FILE</div><h2>${ev.name}</h2><p>${ev.desc}</p><div class="evidence-status">확보 완료 · 확인됨</div></div></div></div>`;modalRoot.querySelectorAll('[data-close-modal]').forEach(el=>el.addEventListener('click',e=>{if(e.target===el||el.classList.contains('modal-close'))closeModal();}));if(window.currentScene==='evidence')renderScene('evidence');}
 function closeModal(){modalRoot.innerHTML='';}
-
-function dialogueScene(scene){
-  const meta=CASE.people[scene]; const portraitKey={'person-a':'P01','person-b':'P02','person-c':'P04','police':'P05','analyst':'P03'}[scene];
-  const messages=state.chats[scene].map(m=>`<div class="message ${m.who==='player'?'player':''} ${m.who==='system'?'system':''}">${escapeHtml(m.text)}</div>`).join('');
-  const apiBadge=state.settings.useGemini&&state.settings.apiKey?`<span class="api-live">GEMINI · ${escapeHtml(state.settings.model)}</span>`:'<span class="api-offline">LOCAL FALLBACK</span>';
-  return `<article class="scene-card dialogue-layout"><aside class="portrait-panel"><div class="portrait case-portrait" style="${atlasStyle(portraitKey)}"><div><div class="eyebrow">INTERVIEW SUBJECT</div><strong>${meta.name}</strong><p class="subtle">${meta.role}</p></div></div></aside><section class="chat-panel"><header class="scene-header"><div><div class="eyebrow">INTERVIEW LOG</div><h3>${meta.name}</h3></div>${apiBadge}</header><div class="chat-log" id="chat-log">${messages}</div><div class="chat-controls"><button class="btn btn-ghost" id="show-evidence">증거 확인</button><input id="chat-input" autocomplete="off" placeholder="질문 입력…"><button id="send-chat" class="btn btn-primary">전송</button></div></section></article>`;
-}
+function dialogueScene(scene){const meta=CASE.people[scene];const portraitKey={'person-a':'P01','person-b':'P02','person-c':'P04','police':'P05','analyst':'P03'}[scene];const messages=state.chats[scene].map(m=>`<div class="message ${m.who==='player'?'player':''} ${m.who==='system'?'system':''}">${escapeHtml(m.text)}</div>`).join('');const apiBadge=state.settings.useGemini&&state.settings.apiKey?`<span class="api-live">GEMINI · ${escapeHtml(state.settings.model)}</span>`:'<span class="api-offline">LOCAL FALLBACK</span>';return `<article class="scene-card dialogue-layout"><aside class="portrait-panel"><div class="portrait case-portrait" style="${atlasStyle(portraitKey)}"><div><div class="eyebrow">INTERVIEW SUBJECT</div><strong>${meta.name}</strong><p class="subtle">${meta.role}</p></div></div></aside><section class="chat-panel"><header class="scene-header"><div><div class="eyebrow">INTERVIEW LOG</div><h3>${meta.name}</h3></div>${apiBadge}</header><div class="chat-log" id="chat-log">${messages}</div><div class="chat-controls"><button class="btn btn-ghost" id="show-evidence">증거 확인</button><input id="chat-input" autocomplete="off" placeholder="질문 입력…"><button id="send-chat" class="btn btn-primary">전송</button></div></section></article>`;}
 
 function actorRules(scene){
-  const meta=CASE.people[scene];
-  const dossiers={
-    'person-a':`차분하지만 회계 문제에는 예민하다. 피해자와 회계 문제로 언쟁한 적이 있다. 피해자가 그날 서류를 외부로 보내야 한다고 말한 것을 안다. 본인은 21:20쯤 관리실에서 나왔다고 진술한다.`,
-    'person-b':`사건과 거리를 두고 싶어 한다. 배송 완료 시각은 21:34 전후다. 1층 우편함 부근에서 피해자가 큰 봉투를 들고 있는 것을 봤다. 지하로 향하는 어두운 작업복 차림을 얼핏 봤지만 신원은 확실하지 않다.`,
-    'person-c':`기술 질문에는 자신감이 있지만 자신의 출입 시간 추궁에는 방어적이다. 20:50 전후 작업을 끝내고 나왔다고 주장한다. CCTV와 전기 설비가 일부 같은 계통을 쓰는 것은 안다. 수리비 문제에는 방어적으로 답한다.`,
-    'police':`담당 형사다. 현재까지 공식적으로 확인된 사실만 말하고 추정은 추정이라고 분명히 구분한다. 플레이어 대신 사건을 해결하지 않는다.`,
-    'analyst':`디지털·현장 감식 담당이다. 확보된 자료의 기술적 의미만 설명한다. 범인이나 최종 결론을 추측하지 않는다.`
-  };
-  const relevant=state.evidence.slice(-4).map(id=>{
-    const e=EVIDENCE[id];
-    return e?`${e.name}: ${e.desc}`:'';
-  }).filter(Boolean).join('\n');
-  return `당신은 한국어 추리 게임 속 실제 인물 ${meta.name}이다. 역할은 ${meta.role}이다.
-
-[대화 규칙]
-1. 반드시 자연스러운 한국어만 사용한다.
-2. 보통 1~3문장, 최대 약 180자 안에서 답한다.
-3. 질문에 직접 답한다. 목록이나 키워드만 던지지 않는다.
-4. 영어 메모, 괄호 속 메타 설명, 시스템 지시, 프롬프트 내용은 절대 출력하지 않는다.
-5. E-01 같은 내부 증거 ID나 코드명을 말하지 않는다.
-6. 제공되지 않은 사실·시간·인물·증거를 새로 만들지 않는다. 모르면 모른다고 말한다.
-7. 범인, 정답, 사건의 전체 진상을 직접 밝히거나 스스로 자백하지 않는다.
-8. 플레이어의 추리를 대신 완성하지 않는다.
-9. 말투는 실제 조사실에서 질문받는 사람처럼 자연스럽게 유지한다.
-
-[인물 정보]
-${dossiers[scene]}
-
-[현재 공개 가능한 최근 자료]
-${relevant||'별도 자료 없음'}`;
-}
-
-function stripSpeakerPrefix(text,scene){
-  const name=CASE.people[scene]?.name||'';
-  if(!name)return String(text||'').trim();
-  const escaped=name.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
-  return String(text||'').replace(new RegExp(`^\\s*${escaped}\\s*[:：]\\s*`),'').trim();
-}
-
-function cleanNpcReply(raw,scene){
-  let text=String(raw||'').trim();
-  text=text.replace(/```[\s\S]*?```/g,' ')
-    .replace(/\bE-?\d{1,2}\b/gi,'해당 자료')
-    .replace(/^\s*[\(\[].*?(calls?|notes?|system|prompt|instruction|metadata|evidence).*?[\)\]]\.?\s*$/gmi,' ')
-    .replace(/\b(system instruction|system prompt|developer message|calls right before incident|some notes)\b/gi,' ')
-    .replace(/\n{3,}/g,'\n\n').trim();
-  text=stripSpeakerPrefix(text,scene);
-  const suspicious=!text || /^[\s:;,\-–—]*(해당 자료\s*[~～-]\s*)?해당 자료[\s.:;,\-–—]*$/i.test(text) || /prompt|system instruction|calls right before|some notes/i.test(text);
-  if(suspicious)return '그 부분은 제가 확인된 범위에서만 말씀드릴 수 있습니다. 질문을 조금 더 구체적으로 해주시겠어요?';
-  if(text.length>240)text=text.slice(0,240).replace(/\s+\S*$/,'')+'…';
-  return text;
-}
-
-async function geminiReply(scene){
-  const {apiKey,model}=state.settings;
-  if(!apiKey)throw new Error('API 키가 없습니다.');
-  let history=state.chats[scene]
-    .filter(m=>m.who==='player'||m.who==='npc')
-    .slice(-7)
-    .map(m=>({role:m.who==='player'?'user':'model',parts:[{text:m.who==='player'?m.text:cleanNpcReply(m.text,scene)}]}));
-  while(history.length&&history[0].role==='model')history.shift();
-  if(!history.length)throw new Error('질문이 없습니다.');
-  const url=`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`;
-  const controller=new AbortController();
-  const timeout=setTimeout(()=>controller.abort(),12000);
-  try{
-    const res=await fetch(url,{method:'POST',signal:controller.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({
-      systemInstruction:{parts:[{text:actorRules(scene)}]},contents:history,generationConfig:{temperature:.35,topP:.8,maxOutputTokens:120,candidateCount:1}
-    })});
-    const data=await res.json();
-    if(!res.ok)throw new Error(data?.error?.message||`HTTP ${res.status}`);
-    const raw=data?.candidates?.[0]?.content?.parts?.map(p=>p.text||'').join('').trim();
-    if(!raw)throw new Error('빈 응답');
-    return cleanNpcReply(raw,scene);
-  }catch(err){
-    if(err?.name==='AbortError')throw new Error('응답 시간이 길어 로컬 응답으로 전환했습니다.');
-    throw err;
-  }finally{clearTimeout(timeout);}
-}
-
-function wireDialogue(scene){
-  const input=document.querySelector('#chat-input'),send=document.querySelector('#send-chat');
-  const submit=async()=>{
-    const text=input.value.trim(); if(!text||send.disabled)return; state.chats[scene].push({who:'player',text}); input.value=''; send.disabled=true; send.textContent='응답 중…'; state.feed=`${CASE.people[scene].name}에게 질문했습니다.`;save();renderScene(scene);
-    let reply;
-    try{ reply=(state.settings.useGemini&&state.settings.apiKey)?await geminiReply(scene):mockReply(scene,text); }
-    catch(err){ reply=`${mockReply(scene,text)}\n\n[AI 응답 지연으로 로컬 진술을 표시했습니다.]`; }
-    state.chats[scene].push({who:'npc',text:reply}); state.feed=`${CASE.people[scene].name}의 진술이 기록되었습니다.`; save(); renderScene(scene);
-  };
-  send.addEventListener('click',submit); input.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();submit();}}); document.querySelector('#show-evidence')?.addEventListener('click',()=>renderScene('evidence'));
-}
-
-function mockReply(scene,text){
-  const t=text.toLowerCase();
-  if(scene==='person-a'){if(/돈|회계|수리비|정산|적립/.test(t))return state.evidence.includes('E-11')?'한소영: 그 정산표까지 보셨군요. 제가 문제를 제기한 건 맞아요. 숫자가 이상해서 윤 관리인에게 원본을 따로 보관하라고 했습니다.':'한소영: 회계 문제로 언쟁한 적은 있습니다. 하지만 구체적인 자료는 경찰에 확인해 보세요.';if(/우편|봉투|보내/.test(t))return '한소영: 윤 관리인이 저녁에 서류를 외부로 보내야 한다고 했어요. 누구에게 보내는지는 말하지 않았습니다.';if(/시간|언제|몇 시/.test(t))return '한소영: 9시 20분쯤 관리실에서 나왔습니다. 그 뒤에는 제 집에 있었습니다.';}
-  if(scene==='person-b'){if(/우편|우편함|봉투/.test(t)){collectEvidenceSilent('E-09');return '이준석: 9시 반 조금 넘어서 1층 우편함 근처를 지나갔는데, 관리인 아저씨가 큰 봉투를 들고 있었습니다.';}if(/사람|누구|봤/.test(t))return '이준석: 지하 쪽으로 내려가는 사람을 얼핏 본 것 같긴 한데 확실하지 않습니다. 작업복 비슷한 어두운 옷이었어요.';if(/시간|몇 시|언제/.test(t))return '이준석: 배송 완료가 9시 34분으로 찍혀 있을 겁니다. 저는 곧바로 다음 건물로 갔어요.';}
-  if(scene==='person-c'){if(/시간|언제|몇 시|떠났|나갔/.test(t))return state.evidence.includes('E-04')?'차민규: …패널 기록이 남아 있다고요? 원격 점검 기록일 수도 있습니다. 저는 9시 전에는 작업을 끝낸 걸로 기억합니다.':'차민규: 8시 50분 전후로 끝내고 나왔습니다. 늦게까지 있을 이유가 없었습니다.';if(/cctv|정전|차단|패널/.test(t))return state.evidence.includes('E-07')?'차민규: CCTV가 같은 회로에 물려 있긴 합니다. 하지만 장애가 났다고 해서 제가 조작했다는 뜻은 아니죠.':'차민규: 전기 쪽 문제라면 가능성은 여러 가지입니다. 기록부터 보셔야 할 겁니다.';if(/수리비|정산|청구|돈/.test(t))return '차민규: 계약 비용은 관리사무소가 정산합니다. 저는 작업한 만큼 청구했을 뿐입니다.';}
-  if(scene==='police'){if(/우편|우편함/.test(t)){collectEvidenceSilent('E-10');return '이정훈 형사: 공용 발송함 가장자리에서 찢어진 두꺼운 봉투 조각이 나왔습니다. 내용물은 없었습니다.';}if(/추가|새로운|수사|결과/.test(t)){collectEvidenceSilent('E-13');return '이정훈 형사: 피해자 휴대전화 메모에서 “원본은 보내고 사본 보관”이라는 짧은 문장이 확인됐습니다.';}return '이정훈 형사: 확인된 사실과 추정은 구분해서 보십시오. 특히 CCTV가 끊긴 시각 전후가 중요합니다.';}
-  if(scene==='analyst'){if(/사다리|추락|사고/.test(t))return '서지아 조사관: 사다리 위치와 피해자의 작업 동선이 자연스럽게 맞지 않습니다.';if(/패널|핀|로그|전기/.test(t)){collectEvidenceSilent('E-12');return '서지아 조사관: 21시 43분에 설비 패널이 기술자 모드로 열렸습니다. 인증 방식은 개인 작업 PIN입니다.';}if(/정산|수리비|서류/.test(t)){collectEvidenceSilent('E-11');return '서지아 조사관: 피해자 파일에서 최근 4개월 수리비 정산표 사본을 복구했습니다. 같은 항목이 반복 청구된 흔적이 있습니다.';}if(/우편|봉투/.test(t)){collectEvidenceSilent('E-14');return '서지아 조사관: 발송함 내부 카운터 기록상 21시 52분 무렵 문이 한 차례 다시 열렸습니다.';}}
-  return `${CASE.people[scene].name}: 그 질문만으로는 더 말씀드릴 내용이 없습니다. 다른 기록과 함께 확인해 보시죠.`;
-}
-
-function collectEvidence(id){
-  if(!id)return; if(state.evidence.includes(id)){state.feed='이미 확보한 자료입니다.';}else{state.evidence.push(id);if(!state.unseenEvidence.includes(id))state.unseenEvidence.push(id);state.feed=`새로운 증거 ${id}가 등록되었습니다.`;}save();refreshStatus();
-}
+  const meta=CASE.people[scene];const dossiers={'person-a':`성격은 차분하지만 회계 문제에는 예민하다. 피해자와 회계 문제로 언쟁한 적이 있다. 피해자가 그날 서류를 외부로 보내야 한다고 말한 것을 안다. 본인은 21:20쯤 관리실에서 나왔다고 진술한다.`,'person-b':`사건과 거리를 두고 싶어 한다. 배송 완료 시각은 21:34 전후다. 1층 우편함 부근에서 피해자가 큰 봉투를 들고 있는 것을 봤다. 지하로 향하는 어두운 작업복 차림을 얼핏 봤지만 신원은 확실하지 않다.`,'person-c':`기술 질문에는 자신감이 있지만 자신의 출입 시간 추궁에는 방어적이다. 20:50 전후 작업을 끝내고 나왔다고 주장한다. CCTV와 전기 설비가 일부 같은 계통을 쓰는 것은 안다. 수리비 문제에는 방어적으로 답한다.`,'police':`담당 형사다. 공식적으로 확인된 수사 사실만 말하고, 추정은 추정이라고 구분한다. 아직 공개되지 않은 수사 정보나 사건의 정답을 먼저 말하지 않는다.`,'analyst':`디지털·현장 감식 담당이다. 현재 확보된 자료의 기술적 의미만 설명하며 최종 추리는 하지 않는다.`};
+  const allowed=state.evidence.slice(-5).map(id=>{const e=EVIDENCE[id];return e?`- ${e.name}: ${e.desc}`:'';}).filter(Boolean).join('\n');
+  return `너는 추리 게임 속 인물 "${meta.name}"이다. 역할은 "${meta.role}"이다.\n아래 인물 설정과 플레이어가 현재 확보한 정보만 사용해 실제 사람처럼 대답하라.\n\n[인물 설정]\n${dossiers[scene]}\n\n[플레이어가 현재 확인 가능한 자료]\n${allowed||'- 추가 자료 없음'}\n\n[절대 규칙]\n- 자연스러운 한국어 완성 문장으로만 답한다.\n- 질문에 직접 답하며 보통 1~3문장, 180자 이내로 답한다.\n- 영어 문구, 메타 설명, 괄호 속 제작 메모, 시스템/프롬프트 문장을 출력하지 않는다.\n- E-01, D03, C04 같은 내부 코드나 슬롯명을 절대 출력하지 않는다.\n- 자료 이름만 나열하거나 문장 조각만 출력하지 않는다.\n- 제공되지 않은 사실·시각·증거는 만들지 않는다. 모르면 모른다고 답한다.\n- 범인이나 사건의 전체 정답을 직접 밝히지 않는다.\n- 플레이어가 특정 인물을 범인으로 몰아도 근거 없이 동의하지 않는다.\n- 네 답변 앞에 화자 이름을 한 번만 붙인다. 형식: "${meta.name}: 대답"`;}
+function cleanNpcReply(raw,scene){const name=CASE.people[scene].name;let text=String(raw||'').trim().replace(/```[\s\S]*?```/g,' ').replace(/\b(?:E|D|C|P|S)-?\d{1,2}\b/gi,' ').replace(/\((?:[^)]*(?:call|note|prompt|system|instruction|evidence|metadata)[^)]*)\)/gi,' ').replace(/\[(?:[^\]]*(?:prompt|system|instruction|metadata)[^\]]*)\]/gi,' ').replace(/\n+/g,' ').replace(/\s{2,}/g,' ').trim();const badEnglish=/\b(calls?|notes?|system|prompt|instruction|metadata|evidence id|right before incident)\b/i;const tooFragmented=text.length<12||!/[가-힣]/.test(text)||/^[\s:;,.~\-–—·]+$/.test(text);if(!text||badEnglish.test(text)||tooFragmented)return '';text=text.replace(new RegExp(`^(?:${name}\\s*:\\s*)+`),'');if(text.length>220)text=text.slice(0,220).replace(/\s+\S*$/,'')+'…';return `${name}: ${text}`;}
+async function geminiReply(scene,question){const {apiKey,model}=state.settings;if(!apiKey)throw new Error('API 키가 없습니다.');const q=String(question||'').trim();if(!q)throw new Error('질문이 없습니다.');const url=`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`;const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),9000);try{const res=await fetch(url,{method:'POST',signal:controller.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({systemInstruction:{parts:[{text:actorRules(scene)}]},contents:[{role:'user',parts:[{text:`플레이어의 질문: ${q}\n이 질문에만 답하라.`}]}],generationConfig:{temperature:.25,topP:.75,maxOutputTokens:100,candidateCount:1}})});const data=await res.json();if(!res.ok)throw new Error(data?.error?.message||`HTTP ${res.status}`);const raw=data?.candidates?.[0]?.content?.parts?.map(p=>p.text||'').join('').trim();const cleaned=cleanNpcReply(raw,scene);if(!cleaned)throw new Error('응답 형식 검증 실패');return cleaned;}finally{clearTimeout(timeout);}}
+function wireDialogue(scene){const input=document.querySelector('#chat-input'),send=document.querySelector('#send-chat');const submit=async()=>{const text=input.value.trim();if(!text||send.disabled)return;state.chats[scene].push({who:'player',text});input.value='';send.disabled=true;send.textContent='응답 중…';state.feed=`${CASE.people[scene].name}에게 질문했습니다.`;save();renderScene(scene);let reply;try{reply=(state.settings.useGemini&&state.settings.apiKey)?await geminiReply(scene,text):mockReply(scene,text);}catch(err){reply=mockReply(scene,text);}state.chats[scene].push({who:'npc',text:reply});state.feed=`${CASE.people[scene].name}의 진술이 기록되었습니다.`;save();renderScene(scene);};send.addEventListener('click',submit);input.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();submit();}});document.querySelector('#show-evidence')?.addEventListener('click',()=>renderScene('evidence'));}
+function mockReply(scene,text){const t=text.toLowerCase();if(scene==='person-a'){if(/돈|회계|수리비|정산|적립/.test(t))return state.evidence.includes('E-11')?'한소영: 그 정산표까지 보셨군요. 제가 문제를 제기한 건 맞아요. 숫자가 이상해서 윤 관리인에게 원본을 따로 보관하라고 했습니다.':'한소영: 회계 문제로 언쟁한 적은 있습니다. 하지만 구체적인 자료는 경찰에 확인해 보세요.';if(/우편|봉투|보내/.test(t))return '한소영: 윤 관리인이 저녁에 서류를 외부로 보내야 한다고 했어요. 누구에게 보내는지는 말하지 않았습니다.';if(/시간|언제|몇 시/.test(t))return '한소영: 9시 20분쯤 관리실에서 나왔습니다. 그 뒤에는 제 집에 있었습니다.';}if(scene==='person-b'){if(/우편|우편함|봉투/.test(t)){collectEvidenceSilent('E-09');return '이준석: 9시 반 조금 넘어서 1층 우편함 근처를 지나갔는데, 관리인 아저씨가 큰 봉투를 들고 있었습니다.';}if(/사람|누구|봤/.test(t))return '이준석: 지하 쪽으로 내려가는 사람을 얼핏 본 것 같긴 한데 확실하지 않습니다. 작업복 비슷한 어두운 옷이었어요.';if(/시간|몇 시|언제/.test(t))return '이준석: 배송 완료가 9시 34분으로 찍혀 있을 겁니다. 저는 곧바로 다음 건물로 갔어요.';}if(scene==='person-c'){if(/시간|언제|몇 시|떠났|나갔/.test(t))return state.evidence.includes('E-04')?'차민규: …패널 기록이 남아 있다고요? 원격 점검 기록일 수도 있습니다. 저는 9시 전에는 작업을 끝낸 걸로 기억합니다.':'차민규: 8시 50분 전후로 끝내고 나왔습니다. 늦게까지 있을 이유가 없었습니다.';if(/cctv|정전|차단|패널/.test(t))return state.evidence.includes('E-07')?'차민규: CCTV가 같은 회로에 물려 있긴 합니다. 하지만 장애가 났다고 해서 제가 조작했다는 뜻은 아니죠.':'차민규: 전기 쪽 문제라면 가능성은 여러 가지입니다. 기록부터 보셔야 할 겁니다.';if(/수리비|정산|청구|돈/.test(t))return '차민규: 계약 비용은 관리사무소가 정산합니다. 저는 작업한 만큼 청구했을 뿐입니다.';}if(scene==='police'){if(/우편|우편함/.test(t)){collectEvidenceSilent('E-10');return '이정훈 형사: 공용 발송함 가장자리에서 찢어진 두꺼운 봉투 조각이 나왔습니다. 내용물은 없었습니다.';}if(/추가|새로운|수사|결과/.test(t)){collectEvidenceSilent('E-13');return '이정훈 형사: 피해자 휴대전화 메모에서 “원본은 보내고 사본 보관”이라는 짧은 문장이 확인됐습니다.';}return '이정훈 형사: 확인된 사실과 추정은 구분해서 보십시오. 특히 CCTV가 끊긴 시각 전후가 중요합니다.';}if(scene==='analyst'){if(/사다리|추락|사고/.test(t))return '서지아 조사관: 사다리 위치와 피해자의 작업 동선이 자연스럽게 맞지 않습니다.';if(/패널|핀|로그|전기/.test(t)){collectEvidenceSilent('E-12');return '서지아 조사관: 21시 43분에 설비 패널이 기술자 모드로 열렸습니다. 인증 방식은 개인 작업 PIN입니다.';}if(/정산|수리비|서류/.test(t)){collectEvidenceSilent('E-11');return '서지아 조사관: 피해자 파일에서 최근 4개월 수리비 정산표 사본을 복구했습니다. 같은 항목이 반복 청구된 흔적이 있습니다.';}if(/우편|봉투/.test(t)){collectEvidenceSilent('E-14');return '서지아 조사관: 발송함 내부 카운터 기록상 21시 52분 무렵 문이 한 차례 다시 열렸습니다.';}}return `${CASE.people[scene].name}: 그 질문만으로는 더 말씀드릴 내용이 없습니다. 다른 기록과 함께 확인해 보시죠.`;}
+function collectEvidence(id){if(!id)return;if(state.evidence.includes(id)){state.feed='이미 확보한 자료입니다.';}else{state.evidence.push(id);if(!state.unseenEvidence.includes(id))state.unseenEvidence.push(id);state.feed=`새로운 증거 ${id}가 등록되었습니다.`;}save();refreshStatus();}
 function collectEvidenceSilent(id){if(id&&!state.evidence.includes(id)){state.evidence.push(id);if(!state.unseenEvidence.includes(id))state.unseenEvidence.push(id);state.feed=`새로운 자료 ${id}가 확보되었습니다.`;save();}}
 function collectContradiction(id){if(!state.contradictions.includes(id)){state.contradictions.push(id);state.feed='진술과 기록 사이의 모순을 기록했습니다.';save();alert(state.feed);}else alert('이미 기록한 모순입니다.');refreshStatus();}
-
-function finalScene(){
-  const ready=state.evidence.length>=sealed.evidenceThreshold&&state.contradictions.length>=sealed.contradictionThreshold;
-  return panel('최종 추리','FINAL DEDUCTION',`<div class="lock-notice ${ready?'ready':''}">${ready?'최종 의견서를 제출할 수 있습니다. 정답 선택지는 제공되지 않습니다. 사건 전말을 자신의 문장으로 입증하십시오.':`현재 확보 증거 ${state.evidence.length}/${sealed.evidenceThreshold}, 기록 모순 ${state.contradictions.length}/${sealed.contradictionThreshold}. 최소 수사 조건이 필요합니다.`}</div><div class="deduction-guide" style="margin-top:18px"><div class="guide-card"><strong>범인</strong><br>누가 사건을 일으켰다고 판단하는가?</div><div class="guide-card"><strong>동기</strong><br>왜 행동했는가?</div><div class="guide-card"><strong>방법과 시간</strong><br>어떻게 사건을 만들고 흔적을 감췄는가?</div><div class="guide-card"><strong>입증</strong><br>증거와 진술의 모순을 연결해 설명하십시오.</div></div><textarea id="final-text" class="deduction-area" placeholder="사건의 전말을 자유롭게 작성하십시오.">${escapeHtml(state.finalText)}</textarea><div class="submit-row"><span class="submit-hint">범인 이름만 적는 답변은 해결로 인정되지 않습니다.</span><button id="final-submit" class="btn btn-primary" ${ready?'':'disabled'}>최종 의견서 제출</button></div>${state.solved?`<div class="result-box" style="margin-top:18px"><strong>CASE CLOSED · ${state.grade}</strong><br>이 사건은 해결 기록에 저장되었습니다.</div>`:''}`);
-}
-function submitFinal(){
-  const text=(state.finalText||'').trim(); if(text.length<120){alert('최종 의견서가 너무 짧습니다. 범인·동기·방법·핵심 증거를 연결해서 서술해 주세요.');return;}
-  const norm=text.toLowerCase().replace(/\s+/g,' ');let score=0;if(norm.includes(sealed.culprit))score+=3;sealed.requiredConcepts.forEach(g=>{if(g.some(k=>norm.includes(k.toLowerCase())))score+=1;});if(/e-?0?[347]|e-?1[124]/i.test(text))score+=1;if(state.contradictions.length>=2)score+=1;
-  if(score>=9){state.solved=true;state.grade='S';}else if(score>=7){state.solved=true;state.grade='A';}else{state.solved=false;state.grade=null;}save();
-  if(state.solved){alert(`사건 해결 성공 · 등급 ${state.grade}`);renderScene('final');}else alert('현재 의견서만으로는 사건을 입증하기 어렵습니다. 증거와 시간대의 연결을 더 보강해 보세요.');
-}
-
+function finalScene(){const ready=state.evidence.length>=sealed.evidenceThreshold&&state.contradictions.length>=sealed.contradictionThreshold;return panel('최종 추리','FINAL DEDUCTION',`<div class="lock-notice ${ready?'ready':''}">${ready?'최종 의견서를 제출할 수 있습니다. 정답 선택지는 제공되지 않습니다. 사건 전말을 자신의 문장으로 입증하십시오.':`현재 확보 증거 ${state.evidence.length}/${sealed.evidenceThreshold}, 기록 모순 ${state.contradictions.length}/${sealed.contradictionThreshold}. 최소 수사 조건이 필요합니다.`}</div><div class="deduction-guide" style="margin-top:18px"><div class="guide-card"><strong>범인</strong><br>누가 사건을 일으켰다고 판단하는가?</div><div class="guide-card"><strong>동기</strong><br>왜 행동했는가?</div><div class="guide-card"><strong>방법과 시간</strong><br>어떻게 사건을 만들고 흔적을 감췄는가?</div><div class="guide-card"><strong>입증</strong><br>증거와 진술의 모순을 연결해 설명하십시오.</div></div><textarea id="final-text" class="deduction-area" placeholder="사건의 전말을 자유롭게 작성하십시오.">${escapeHtml(state.finalText)}</textarea><div class="submit-row"><span class="submit-hint">범인 이름만 적는 답변은 해결로 인정되지 않습니다.</span><button id="final-submit" class="btn btn-primary" ${ready?'':'disabled'}>최종 의견서 제출</button></div>${state.solved?`<div class="result-box" style="margin-top:18px"><strong>CASE CLOSED · ${state.grade}</strong><br>이 사건은 해결 기록에 저장되었습니다.</div>`:''}`);}
+function submitFinal(){const text=(state.finalText||'').trim();if(text.length<120){alert('최종 의견서가 너무 짧습니다. 범인·동기·방법·핵심 증거를 연결해서 서술해 주세요.');return;}const norm=text.toLowerCase().replace(/\s+/g,' ');let score=0;if(norm.includes(sealed.culprit))score+=3;sealed.requiredConcepts.forEach(g=>{if(g.some(k=>norm.includes(k.toLowerCase())))score+=1;});if(/e-?0?[347]|e-?1[124]/i.test(text))score+=1;if(state.contradictions.length>=2)score+=1;if(score>=9){state.solved=true;state.grade='S';}else if(score>=7){state.solved=true;state.grade='A';}else{state.solved=false;state.grade=null;}save();if(state.solved){alert(`사건 해결 성공 · 등급 ${state.grade}`);renderScene('final');}else alert('현재 의견서만으로는 사건을 입증하기 어렵습니다. 증거와 시간대의 연결을 더 보강해 보세요.');}
 function showArchive(){if(!state.solved){alert('아직 해결된 사건이 없습니다.');return;}app.innerHTML=`<section class="screen"><article class="scene-card"><header class="scene-header"><div><div class="eyebrow">CASE ARCHIVE</div><h3>${CASE.title}</h3></div></header><div class="scene-body"><div class="result-box"><strong>CASE CLOSED · ${state.grade}</strong><br>사건 해결 기록이 보존되어 있습니다.</div><div style="margin-top:16px"><button class="btn btn-ghost" data-action="replay">처음부터 다시 수사</button></div></div></article></section>`;}
 function resetCase(){if(!confirm('대화, 증거, 메모, 추리 진행도를 초기화하고 다시 시작할까요?'))return;const settings=state.settings,solved=state.solved,grade=state.grade;state=defaultState();state.settings=settings;state.solved=solved;state.grade=grade;save();showBriefing();}
-
-function showSettings(){
-  const keyMask=state.settings.apiKey?'저장된 키 있음':'키 없음';
-  app.innerHTML=`<section class="screen"><article class="scene-card settings-card"><header class="scene-header"><div><div class="eyebrow">SETTINGS / AI ACTOR</div><h3>Gemini API</h3></div></header><div class="scene-body settings-body"><div class="settings-note"><strong>개인용 브라우저 저장 방식</strong><p>API 키는 GitHub 파일에 기록하지 않고 이 브라우저의 localStorage에만 저장합니다. 공개/공용 PC에서는 사용하지 마세요.</p></div><label>Gemini 사용 <input id="use-gemini" type="checkbox" ${state.settings.useGemini?'checked':''}></label><label>API Key <input id="api-key" class="settings-input" type="password" placeholder="Google AI Studio API key" value="${escapeHtml(state.settings.apiKey)}"><small>${keyMask}</small></label><label>모델 <input id="api-model" class="settings-input" value="${escapeHtml(state.settings.model)}" placeholder="gemini-3.6-flash"></label><div class="settings-actions"><button class="btn btn-primary" id="save-settings">저장</button><button class="btn btn-ghost" id="test-api">연결 테스트</button><button class="btn btn-ghost" data-action="home">홈으로</button></div><div id="api-test-result" class="api-test-result"></div></div></article></section>`;
-  document.querySelector('#save-settings').addEventListener('click',saveSettingsFromForm); document.querySelector('#test-api').addEventListener('click',testApi);
-}
-function saveSettingsFromForm(){state.settings.useGemini=document.querySelector('#use-gemini').checked;state.settings.apiKey=document.querySelector('#api-key').value.trim();state.settings.model=document.querySelector('#api-model').value.trim()||'gemini-3.6-flash';save();alert('설정을 이 브라우저에 저장했습니다.');}
-async function testApi(){
-  saveSettingsFromForm();const out=document.querySelector('#api-test-result');out.textContent='연결 확인 중…';
-  try{const {apiKey,model}=state.settings;if(!apiKey)throw new Error('API 키를 입력하세요.');const url=`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`;const res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{role:'user',parts:[{text:'한국어로 정확히 "연결됨"이라고만 답해.'}]}],generationConfig:{maxOutputTokens:20,temperature:0}})});const data=await res.json();if(!res.ok)throw new Error(data?.error?.message||`HTTP ${res.status}`);out.textContent=`성공: ${data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim()||'응답 수신'}`;}catch(err){out.textContent=`실패: ${err.message}`;}
-}
-
-document.addEventListener('click',e=>{const action=e.target.closest('[data-action]')?.dataset.action;if(action==='open-case')showBriefing();if(action==='start-case')showCase();if(action==='home')showHome();if(action==='archive')showArchive();if(action==='replay')resetCase();if(action==='settings')showSettings();});
-showHome();
+function showSettings(){const keyMask=state.settings.apiKey?'저장된 키 있음':'키 없음';app.innerHTML=`<section class="screen"><article class="scene-card settings-card"><header class="scene-header"><div><div class="eyebrow">SETTINGS / AI ACTOR</div><h3>Gemini API</h3></div></header><div class="scene-body settings-body"><div class="settings-note"><strong>개인용 브라우저 저장 방식</strong><p>API 키는 GitHub 파일에 기록하지 않고 이 브라우저의 localStorage에만 저장합니다. 공개/공용 PC에서는 사용하지 마세요.</p></div><label>Gemini 사용 <input id="use-gemini" type="checkbox" ${state.settings.useGemini?'checked':''}></label><label>API Key <input id="api-key" class="settings-input" type="password" placeholder="Google AI Studio API key" value="${escapeHtml(state.settings.apiKey)}"><small>${keyMask}</small></label><label>모델 <input id="api-model" class="settings-input" value="${escapeHtml(state.settings.model)}" placeholder="gemini-3.6-flash"></label><div class="settings-actions"><button class="btn btn-primary" id="save-settings">저장</button><button class="btn btn-ghost" id="test-api">연결 테스트</button><button class="btn btn-ghost" data-action="home">홈으로</button></div><div id="api-test-result" class="api-test-result"></div></div></article></section>`;document.querySelector('#save-settings').addEventListener('click',saveSettingsFromForm);document.querySelector('#test-api').addEventListener('click',testApi);}
+function saveSettingsFromForm(){state.settings.useGemini=document.querySelector('#use-gemini').checked;state.settings.apiKey=document.querySelector('#api-key').value.trim();state.settings.model=document.querySelector('#api-model').value.trim()||'gemini-3.6-flash';save();alert('설정을 저장했습니다.');}
+async function testApi(){saveSettingsFromForm();const out=document.querySelector('#api-test-result');out.textContent='연결 확인 중…';try{const url=`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(state.settings.model)}:generateContent?key=${encodeURIComponent(state.settings.apiKey)}`;const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:'한국어로 확인이라고만 답해.'}]}],generationConfig:{maxOutputTokens:8}})});const d=await r.json();if(!r.ok)throw new Error(d?.error?.message||`HTTP ${r.status}`);out.textContent=`연결 성공 · ${d?.candidates?.[0]?.content?.parts?.[0]?.text||'응답 수신'}`;}catch(e){out.textContent=`연결 실패 · ${e.message}`;}}
+function handleAction(action){if(action==='home')showHome();if(action==='open-case')showBriefing();if(action==='start-case')showCase();if(action==='archive')showArchive();if(action==='settings')showSettings();if(action==='replay')resetCase();}
+document.addEventListener('click',e=>{const el=e.target.closest('[data-action]');if(el)handleAction(el.dataset.action);});showHome();
