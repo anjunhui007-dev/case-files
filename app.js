@@ -40,7 +40,7 @@ const EVIDENCE = {
 
 // atlas-case01.png: 1536x1024 contact sheet. Rectangles are source-pixel crops.
 const ATLAS = {
-  file:'assets/cases/case1_last-mailbox/atlas-case01.png', w:1536, h:1024,
+  file:'atlas-case01.png', w:1536, h:1024,
   rects: {
     E01:[18,350,198,163], E02:[226,350,198,163], E03:[435,350,198,163], E04:[643,350,198,163], E05:[851,350,198,163], E06:[1060,350,198,163], E07:[1268,350,198,163], E08:[1352,350,166,163],
     C01:[18,570,252,174], C02:[278,570,252,174], C03:[538,570,252,174], C04:[798,570,252,174], C05:[1058,570,252,174], C06:[1318,570,200,174],
@@ -56,7 +56,7 @@ const NAV = [
 
 const defaultState = () => ({
   evidence:['E-01','E-02'], unseenEvidence:['E-01','E-02'], contradictions:[], notes:'', finalText:'', feed:'사건 파일이 열렸습니다.', visited:[], unseenPeople:['person-a'], solved:false, grade:null,
-  settings:{apiKey:'', model:'gemini-2.5-flash', useGemini:true},
+  settings:{apiKey:'', model:'gemini-3.6-flash', useGemini:true},
   chats:{
     'person-a':[{who:'npc',text:'한소영: 경찰에 이미 말씀드린 내용은 있습니다. 그래도 필요하면 다시 답하겠습니다.'}],
     'person-b':[{who:'npc',text:'이준석: 저는 택배만 놓고 나왔어요. 그 뒤 일은 정말 모릅니다.'}],
