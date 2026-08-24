@@ -1,23 +1,12 @@
-# CASE FILES v0.0.3
+# CASE FILES v0.4.0
 
-개인용 AI 추리 게임 프로토타입.
+- Gemini 기본 모델: gemini-3.6-flash
+- 최근 대화만 전달하여 응답 지연 감소
+- 자연스러운 한국어 1~3문장 응답 규칙
+- 영어 메타/프롬프트/증거 ID 노출 필터
+- 12초 초과 시 로컬 시나리오 응답으로 자동 전환
+- v0.0.3 저장 데이터 자동 마이그레이션
+- app.js?v=0.4.0 캐시 방지
+- Atlas v2 4096x2048 좌표 규격을 코드에 선확정
 
-## GitHub Pages
-저장소 루트에 `index.html`, `styles.css`, `app.js`, `assets/`를 그대로 올립니다.
-Settings → Pages → Deploy from a branch → `main` / `/(root)`.
-
-## Gemini API
-앱의 `설정` 화면에서 API 키를 직접 입력합니다. 키는 소스 파일에 저장되지 않고 현재 브라우저의 localStorage에만 저장됩니다.
-공개 저장소에 API 키를 직접 커밋하지 마세요.
-
-기본 모델은 `gemini-2.5-flash`이며 설정에서 모델 ID를 바꿀 수 있습니다.
-API가 없거나 호출에 실패하면 로컬 시나리오 응답으로 플레이가 계속됩니다.
-
-## v0.0.3 변경점
-- 증거 카드 클릭 시 이미지 + 간단한 설명 모달
-- 새 증거에 NEW 표시, 해당 증거를 열람하면 자동 제거
-- 새 인물 NEW 표시, 해당 인물 대화를 열면 자동 제거
-- CASE 001 atlas 이미지 좌표 크롭 표시
-- Gemini REST API 실제 대화 연동
-- API 키/모델 설정 및 연결 테스트
-- API 실패 시 로컬 대화 fallback
+현재는 기존 atlas-case01.png가 계속 표시됩니다. 추후 atlas-case01-v2.png를 생성한 뒤 app.js의 `const ATLAS = LEGACY_ATLAS;`를 `const ATLAS = ATLAS_V2;`로 바꾸면 됩니다.
