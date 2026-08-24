@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0e1114" />
+  <title>CASE FILES v0.0.2</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <button class="brand-home" data-action="home" aria-label="홈으로 이동">
+        <span class="eyebrow">INVESTIGATION MANAGEMENT SYSTEM</span>
+        <span class="brand-title">CASE FILES</span>
+      </button>
+      <div class="topbar-status">
+        <span class="status-dot"></span>
+        <span>v0.0.2 / CASE 001</span>
+      </div>
+    </header>
+
+    <main id="app"></main>
+  </div>
+
+  <template id="home-template">
+    <section class="screen screen-home">
+      <div class="hero-panel grim-panel">
+        <div class="hero-overlay"></div>
+        <div class="hero-copy">
+          <div class="eyebrow">CASE DATABASE</div>
+          <h2>해결되지 않은 사건을 분석하십시오.</h2>
+          <p>대화, 현장 조사, 증거 검토, CCTV 분석을 통해 사건의 구조를 재구성합니다.</p>
+          <button class="btn btn-primary" data-action="open-case">CASE 001 열기</button>
+        </div>
+      </div>
+
+      <div class="dashboard-grid">
+        <button class="dashboard-card" data-action="open-case">
+          <span class="card-index">01</span>
+          <span>
+            <strong>마지막 우편함</strong>
+            <small>의문사 / CASE 001 / 미수사</small>
+          </span>
+          <span class="badge">ACTIVE</span>
+        </button>
+        <button class="dashboard-card muted-card" data-action="archive">
+          <span class="card-index">AR</span>
+          <span>
+            <strong>사건 기록실</strong>
+            <small>해결 기록과 수집 자료</small>
+          </span>
+        </button>
+        <button class="dashboard-card muted-card" data-action="settings">
+          <span class="card-index">ST</span>
+          <span>
+            <strong>설정</strong>
+            <small>대화 API 연결 전 로컬 시나리오 모드</small>
+          </span>
+        </button>
+      </div>
+    </section>
+  </template>
+
+  <template id="case-template">
+    <section class="screen investigation-layout">
+      <aside class="sidebar grim-panel">
+        <div class="case-label">CASE 001</div>
+        <h2>마지막 우편함</h2>
+        <p class="subtle">STATUS: INVESTIGATION ACTIVE</p>
+
+        <nav class="investigation-nav">
+          <button class="nav-item active" data-scene="hub">수사 본부</button>
+          <button class="nav-item" data-scene="person-a">한소영과 대화 <span class="tiny-badge">NEW</span></button>
+          <button class="nav-item" data-scene="person-b">이준석과 대화</button>
+          <button class="nav-item" data-scene="person-c">차민규와 대화</button>
+          <button class="nav-item" data-scene="scene">사건 현장 둘러보기</button>
+          <button class="nav-item" data-scene="police">경찰의 수사 현황</button>
+          <button class="nav-item" data-scene="analyst">조사원과 대화</button>
+          <button class="nav-item" data-scene="cctv">CCTV 보기</button>
+          <button class="nav-item" data-scene="evidence">증거 보관함</button>
+          <button class="nav-item" data-scene="notes">추리 노트</button>
+          <button class="nav-item danger" data-scene="final">최종 추리</button>
+        </nav>
+
+        <button class="btn btn-ghost full" data-action="home">← 사건 목록</button>
+      </aside>
+
+      <section class="workspace">
+        <div id="scene-content"></div>
+      </section>
+
+      <aside class="status-panel grim-panel">
+        <div class="eyebrow">CASE STATUS</div>
+        <div class="metric"><span>증거</span><strong id="metric-evidence">02 / 14</strong></div>
+        <div class="metric"><span>모순</span><strong id="metric-contradictions">00 / ??</strong></div>
+        <div class="metric"><span>인물</span><strong>05 / 05</strong></div>
+        <div class="progress"><span id="progress-bar"></span></div>
+        <div class="status-feed">
+          <div class="eyebrow">RECENT</div>
+          <div id="recent-feed" class="feed-item">사건 파일이 열렸습니다.</div>
+        </div>
+      </aside>
+    </section>
+  </template>
+
+  <script src="app.js"></script>
+</body>
+</html>
