@@ -38,11 +38,11 @@ const EVIDENCE = {
   'E-14': {name:'우편물 회수 기록', desc:'공용 발송함의 개폐·회수 시각을 확인할 수 있는 관리 기록.', atlas:'D07'}
 };
 
-const LEGACY_ATLAS = { file:'atlas-case01.png', w:1536, h:1024, rects:{} };
+const LEGACY_ATLAS = { file:'atlas-case01-github.png', w:1536, h:1024, rects:{} };
 
 // v0.4.1 Atlas v2 — 4096×4096 source image, exact non-overlapping crops.
 const ATLAS_V2 = {
-  file:'atlas-case01-v2.png', w:4096, h:4096,
+  file:'atlas-case01-v2-github.png', w:4096, h:4096,
   rects:{
     P01:[64,64,704,768], P02:[832,64,704,768], P03:[1600,64,704,768], P04:[2368,64,704,768], P05:[3136,64,704,768],
     S01:[64,896,944,768], S02:[1040,896,944,768], S03:[2016,896,944,768], S04:[2992,896,944,768],
