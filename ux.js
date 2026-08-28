@@ -1,0 +1,1 @@
+(()=>{const d=document.querySelector('#panel');if(!d)return;d.addEventListener('click',e=>{if(e.target!==d)return;const r=d.getBoundingClientRect();const inside=e.clientX>=r.left&&e.clientX<=r.right&&e.clientY>=r.top&&e.clientY<=r.bottom;if(!inside)d.close()});})();
